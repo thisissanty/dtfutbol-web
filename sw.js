@@ -2,7 +2,7 @@
 // cambian nunca: se sirven de la caché. La página se pide siempre a la red (así cada versión nueva
 // llega enseguida) y, sin conexión, sale la última guardada. Cada versión usa su propia caché y
 // borra las anteriores.
-const CACHE='pcf-0.23.23-mup4tvny';
+const CACHE='pcf-0.23.25-mus4afj1';
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil((async()=>{
   for(const k of await caches.keys()) if(k!==CACHE) await caches.delete(k);
