@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mandá el plantel · DT Fútbol</title>
+<meta name="description" content="Encargados de cada club: mandá el plantel completo para que tu cuadro aparezca con sus jugadores reales en DT Fútbol.">
+<style>
+:root{--bg:#0b1624;--bg2:#12233a;--bg3:#0e1c2f;--tx:#e8eef5;--mu:#9fb0c3;--ac:#f2cc65;--li:#25405f;--ok:#4fd18b;--mal:#ff7a7a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:36px 16px 80px}
+h1{font-size:30px;margin:0 0 6px;color:var(--ac)} h2{font-size:18px;margin:0 0 12px}
+.mu{color:var(--mu);font-size:14px} a{color:var(--ac)}
+section{background:var(--bg2);border:1px solid var(--li);border-radius:12px;padding:18px;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mu)}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--bg3);border:1px solid var(--li);border-radius:8px;padding:9px 10px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offset:1px}
+textarea{min-height:110px;resize:vertical}
+.btn{font:inherit;font-weight:700;border:1px solid var(--li);background:var(--bg3);color:var(--tx);border-radius:8px;padding:10px 14px;cursor:pointer}
+.btn.ac{background:var(--ac);color:#1a1405;border-color:var(--ac)} .btn:disabled{opacity:.5;cursor:default}
+.tabla{width:100%;border-collapse:collapse;font-size:14px}
+.tabla th{text-align:left;color:var(--mu);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--li)}
+.tabla td{padding:4px}
+.tabla input,.tabla select{padding:7px 8px}
+.num{width:64px} .quitar{background:none;border:none;color:var(--mal);font-size:20px;cursor:pointer;padding:4px 8px}
+.fila-acc{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.aviso{padding:12px 14px;border-radius:8px;margin-top:14px;display:none}
+.aviso.ok{display:block;background:#0f3324;border:1px solid var(--ok)} .aviso.mal{display:block;background:#3a1717;border:1px solid var(--mal)}
+.check{flex-direction:row;align-items:flex-start;gap:10px;color:var(--tx)} .check input{width:auto;margin-top:4px}
+@media (max-width:640px){
+  .tabla thead{display:none} .tabla tr{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 0;border-bottom:1px solid var(--li)}
+  .tabla td{padding:0} .tabla td.d-n,.tabla td.d-a{grid-column:span 1} .tabla td.d-x{grid-column:span 2;text-align:right}
+  .num{width:100%}
+}
+</style></head><body><main>
+<h1>Mandá el plantel de tu cuadro</h1>
+<p>DT Fútbol es un juego gratis de fútbol uruguayo, con el interior, el ascenso, el femenino, el futsal y el fútbol playa. Queremos que cada club aparezca con sus jugadores reales. Si sos el encargado (delegado, técnico, dirigente o jugador con los datos), cargá el plantel completo acá y lo sumamos al juego.</p>
+<p class="mu">Cada plantel nuevo entra en las partidas que se empiecen después de cargarlo. Las partidas ya guardadas no cambian.</p>
+
+<form id="f" novalidate>
+<section>
+  <h2>El club</h2>
+  <div class="grid">
+    <label>Deporte<select name="deporte" required>
+      <option value="futbol">Fútbol 11</option><option value="futsal">Futsal</option><option value="playa">Fútbol playa</option></select></label>
+    <label>Rama<select name="rama" required><option value="masc">Masculino</option><option value="fem">Femenino</option></select></label>
+    <label>Categoría<select name="categoria" required>
+      <option>Primera</option><option>Reserva</option><option>Sub 20</option><option>Sub 19</option><option>Sub 17</option><option>Sub 16</option><option>Sub 15</option><option>Sub 14</option><option>Otra</option></select></label>
+    <label>Temporada<input name="temporada" type="number" min="2020" max="2035" required></label>
+    <label>Club<input name="club" required maxlength="80" placeholder="Ej.: Huracán Buceo" autocomplete="organization"></label>
+    <label>Ciudad<input name="ciudad" maxlength="60" placeholder="Ej.: Montevideo"></label>
+    <label>Liga o divisional<input name="liga" maxlength="80" placeholder="Ej.: Divisional D, Liga de Durazno, Copa del Interior"></label>
+  </div>
+</section>
+
+<section>
+  <h2>Quién lo manda</h2>
+  <div class="grid">
+    <label>Nombre y apellido<input name="encargado" required maxlength="80" autocomplete="name"></label>
+    <label>Rol en el club<select name="rol"><option>Delegado</option><option>Técnico</option><option>Dirigente</option><option>Jugador</option><option>Otro</option></select></label>
+    <label>WhatsApp o mail (por si hay dudas)<input name="contacto" required maxlength="120" autocomplete="email"></label>
+  </div>
+</section>
+
+<section>
+  <h2>Jugadores</h2>
+  <p class="mu">Nombre y apellido completos, como figuran en la ficha del club. El resto ayuda pero es opcional.</p>
+  <table class="tabla"><thead><tr><th>N.º</th><th>Nombre</th><th>Apellido</th><th>Puesto</th><th>Nacimiento</th><th>Nacionalidad</th><th></th></tr></thead>
+  <tbody id="filas"></tbody></table>
+  <div class="fila-acc">
+    <button type="button" class="btn" id="mas">+ Agregar jugador</button>
+    <button type="button" class="btn" id="verPegar">Pegar una lista</button>
+  </div>
+  <div id="pegar" hidden style="margin-top:12px">
+    <label>Un jugador por línea: número, nombre y apellido, puesto y fecha de nacimiento, separados por coma (solo el nombre y apellido es obligatorio). Sirve copiar desde Excel o WhatsApp.
+      <textarea id="lista" placeholder="1, Diego Baldriz, arquero, 01/12/1991&#10;7, Federico Correa, ala&#10;Agustín Correa"></textarea></label>
+    <div class="fila-acc"><button type="button" class="btn" id="cargarLista">Pasar a la tabla</button></div>
+  </div>
+</section>
+
+<section>
+  <h2>Cuerpo técnico</h2>
+  <div class="grid">
+    <label>Director técnico<input name="ct_tecnico" maxlength="80"></label>
+    <label>Ayudante técnico<input name="ct_ayudante" maxlength="80"></label>
+    <label>Preparador físico<input name="ct_pf" maxlength="80"></label>
+    <label>Entrenador de arqueros<input name="ct_arqueros" maxlength="80"></label>
+  </div>
+</section>
+
+<section>
+  <label>Algo más que quieras contarnos (cancha, colores, de dónde salen los datos)<textarea name="notas" maxlength="2000"></textarea></label>
+  <label class="check" style="margin-top:12px"><input type="checkbox" name="ok" required> Confirmo que soy parte del club o tengo los datos del plantel, y que son datos que el club ya hace públicos (nombre, puesto y número).</label>
+  <div class="fila-acc"><button class="btn ac" id="enviar" type="submit">Mandar el plantel</button></div>
+  <div class="aviso" id="aviso" role="status"></div>
+</section>
+</form>
+<p class="mu">Si un jugador no quiere aparecer en el juego, escribinos a <a href="mailto:santiago@kaizen.uy">santiago@kaizen.uy</a> y lo sacamos. <a href="/privacidad.html">Privacidad</a> · <a href="/">Ir al juego</a></p>
+</main>
+<script>
+const SUPABASE_URL='https://vdxslhksdjeftikntxye.supabase.co';
+const SUPABASE_KEY='sb_publishable__fYb_vdsCb6ne7OxtExz-g_EHbhEyT1';
+const PUESTOS={futbol:['Arquero','Defensa','Mediocampista','Delantero'],futsal:['Arquero','Cierre','Ala','Pívot','Universal'],playa:['Arquero','Defensor','Ala','Pívot']};
+const f=document.getElementById('f'), filas=document.getElementById('filas'), aviso=document.getElementById('aviso');
+f.temporada.value=new Date().getFullYear();
+const fem=()=>f.rama.value==='fem';
+const FEM={Arquero:'Arquera',Delantero:'Delantera',Defensor:'Defensora'};
+const etiqueta=p=>fem()?(FEM[p]||p):p;
+function opcionesPuesto(sel,valor){ sel.innerHTML='<option value="">—</option>'+PUESTOS[f.deporte.value].map(p=>`<option value="${p}">${etiqueta(p)}</option>`).join(''); if(valor) sel.value=normPuesto(valor); }
+function normPuesto(t){ t=(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); if(!t) return '';
+  if(/arq|gol|port|^g$/.test(t)) return 'Arquero';
+  if(f.deporte.value==='futsal'){ if(/cie|def/.test(t)) return 'Cierre'; if(/ala|ext/.test(t)) return 'Ala'; if(/piv|del/.test(t)) return 'Pívot'; if(/uni/.test(t)) return 'Universal'; }
+  if(f.deporte.value==='playa'){ if(/def|lib|cie/.test(t)) return 'Defensor'; if(/ala/.test(t)) return 'Ala'; if(/piv|del/.test(t)) return 'Pívot'; }
+  if(/def|lat|zag|cent/.test(t)) return 'Defensa'; if(/med|vol|cen|int/.test(t)) return 'Mediocampista'; if(/del|pun|ext|9/.test(t)) return 'Delantero'; return ''; }
+function fila(j={}){ const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input class="num" inputmode="numeric" maxlength="3" aria-label="Número" placeholder="N.º" value="${j.dorsal||''}"></td>
+  <td class="d-n"><input aria-label="Nombre" placeholder="Nombre" maxlength="60" value="${(j.nombre||'').replace(/"/g,'&quot;')}"></td>
+  <td class="d-a"><input aria-label="Apellido" placeholder="Apellido" maxlength="60" value="${(j.apellido||'').replace(/"/g,'&quot;')}"></td>
+  <td><select aria-label="Puesto"></select></td>
+  <td><input aria-label="Fecha de nacimiento" type="date" value="${j.nacimiento||''}"></td>
+  <td><input aria-label="Nacionalidad" placeholder="Nacionalidad" maxlength="40" value="${j.nacionalidad||'Uruguay'}"></td>
+  <td class="d-x"><button type="button" class="quitar" aria-label="Quitar jugador">×</button></td>`;
+  opcionesPuesto(tr.querySelector('select'),j.puesto); tr.querySelector('.quitar').onclick=()=>tr.remove(); filas.append(tr); return tr; }
+for(let i=0;i<5;i++) fila();
+document.getElementById('mas').onclick=()=>fila().querySelector('.d-n input').focus();
+f.deporte.onchange=f.rama.onchange=()=>filas.querySelectorAll('select').forEach(s=>opcionesPuesto(s,s.value));
+document.getElementById('verPegar').onclick=()=>{ const p=document.getElementById('pegar'); p.hidden=!p.hidden; if(!p.hidden) document.getElementById('lista').focus(); };
+function fecha(t){ t=(t||'').trim(); let m=t.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/); if(m){ let y=+m[3]; if(y<100) y+=y>40?1900:2000; return `${y}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`; }
+  m=t.match(/^(\d{4})-(\d{2})-(\d{2})$/); return m?t:''; }
+document.getElementById('cargarLista').onclick=()=>{
+  const lineas=document.getElementById('lista').value.split(/\n/).map(l=>l.trim()).filter(Boolean); if(!lineas.length) return;
+  [...filas.children].forEach(tr=>{ const ins=tr.querySelectorAll('input'); if(!ins[1].value.trim()&&!ins[2].value.trim()) tr.remove(); });
+  for(const l of lineas){ const partes=l.split(/\t|;|,/).map(x=>x.trim()).filter(Boolean); let dorsal='',nom='',puesto='',nac='';
+    for(const p of partes){ if(!dorsal&&/^\d{1,2}$/.test(p)&&!nom) dorsal=p; else if(!nac&&fecha(p)) nac=fecha(p); else if(!puesto&&nom&&normPuesto(p)) puesto=p; else if(!nom) nom=p.replace(/^\d{1,2}[\s.-]+/,m=>{ dorsal=dorsal||m.trim().replace(/\D/g,''); return ''; }); }
+    const w=nom.split(/\s+/); const nombre=w.length>2?w.slice(0,w.length-2).join(' '):w[0]||''; const apellido=w.length>2?w.slice(-2).join(' '):w.slice(1).join(' ');
+    fila({dorsal,nombre,apellido,puesto,nacimiento:nac}); }
+  document.getElementById('lista').value=''; document.getElementById('pegar').hidden=true; };
+function dispositivo(){ try{ let d=localStorage.getItem('pcfuy-dispositivo'); if(!d){ d=crypto.randomUUID(); localStorage.setItem('pcfuy-dispositivo',d); } return d; }catch{ return null; } }
+function mostrar(t,ok){ aviso.className='aviso '+(ok?'ok':'mal'); aviso.textContent=t; aviso.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+f.onsubmit=async e=>{ e.preventDefault();
+  const jugadores=[...filas.children].map(tr=>{ const i=tr.querySelectorAll('input'); return {dorsal:i[0].value.trim()||null,nombre:i[1].value.trim(),apellido:i[2].value.trim(),puesto:tr.querySelector('select').value||null,nacimiento:i[3].value||null,nacionalidad:i[4].value.trim()||null}; })
+    .filter(j=>j.nombre||j.apellido);
+  if(!f.club.value.trim()||!f.encargado.value.trim()||!f.contacto.value.trim()) return mostrar('Faltan el club, tu nombre o un contacto.',false);
+  const incompletos=jugadores.filter(j=>!j.nombre||!j.apellido);
+  if(incompletos.length) return mostrar(`Hay ${incompletos.length} jugador${incompletos.length>1?'es':''} sin nombre o sin apellido. Completalos o quitalos.`,false);
+  if(jugadores.length<5) return mostrar('Cargá al menos cinco jugadores.',false);
+  if(!f.ok.checked) return mostrar('Falta marcar la confirmación del final.',false);
+  const ct=[['Director técnico',f.ct_tecnico.value],['Ayudante técnico',f.ct_ayudante.value],['Preparador físico',f.ct_pf.value],['Entrenador de arqueros',f.ct_arqueros.value]].filter(x=>x[1].trim()).map(([rol,nombre])=>({rol,nombre:nombre.trim()}));
+  const b=document.getElementById('enviar'); b.disabled=true; b.textContent='Mandando…';
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/pcf_enviar_plantel`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
+      body:JSON.stringify({p_deporte:f.deporte.value,p_rama:f.rama.value,p_categoria:f.categoria.value,p_club:f.club.value,p_ciudad:f.ciudad.value,p_liga:f.liga.value,p_temporada:+f.temporada.value||null,
+        p_encargado:f.encargado.value,p_rol:f.rol.value,p_contacto:f.contacto.value,p_jugadores:jugadores,p_cuerpo_tecnico:ct,p_notas:f.notas.value,p_dispositivo:dispositivo()})});
+    const d=await r.json().catch(()=>null);
+    if(!r.ok) throw new Error((d&&d.message)||'No se pudo mandar. Revisar la conexión y probar de nuevo.');
+    mostrar(`¡Gracias! Recibimos el plantel de ${f.club.value.trim()} con ${jugadores.length} jugadores. Lo revisamos y lo sumamos al juego en la próxima versión. Si hay dudas te escribimos.`,true);
+    b.textContent='Enviado';
+  }catch(err){ mostrar(err.message,false); b.disabled=false; b.textContent='Mandar el plantel'; }
+};
+</script>
+</body></html>
